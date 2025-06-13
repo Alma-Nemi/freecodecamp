@@ -1,0 +1,42 @@
+name: FreeCodeCamp CI
+
+on: [push]
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Verify project structure
+        run: |
+          echo "Проверка структуры проектов..."
+          
+          # Проверка существования основных папок
+          if [ ! -d "responsive-web-design" ]; then
+            echo "❌ Папка responsive-web-design отсутствует"
+            exit 1
+          fi
+          
+          if [ ! -d "javascript-algorithms" ]; then
+            echo "❌ Папка javascript-algorithms отсутствует"
+            exit 1
+          fi
+          
+          # Проверка обязательных проектов
+          projects=(
+            "responsive-web-design/cat-photo-app"
+            "responsive-web-design/cafe-menu"
+            "javascript-algorithms/palindrome-checker"
+            "javascript-algorithms/roman-numeral-converter"
+          )
+          
+          for project in "${projects[@]}"; do
+            if [ ! -d "$project" ]; then
+              echo "❌ Проект $project отсутствует"
+              exit 1
+            fi
+          done
+          
+          echo "✅ Структура проектов в порядке"
